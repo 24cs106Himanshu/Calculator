@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Counter</h1>
+        <h1 id="counter">0</h1>
+        
+        <div class="button-container">
+            <button id="INCREMENT1">+1</button>
+            <button id="INCREMENT2">+2</button>
+            <button id="DEC1">-1</button>
+            <button id="DEC2">-2</button>
+            <button id="MUL">×2</button>
+            <button id="DIV">÷2</button>
+            <button id="RESET">Reset</button>
+        </div>
+    </div>
+
+    <script>
+        let count = 0;
+
+        function updateDisplay() {
+            document.getElementById("counter").innerText = count;
+        }
+
+        function increment1() {
+            count++;
+            updateDisplay();
+        }
+
+        function increment2() {
+            count += 2;
+            updateDisplay();
+        }
+
+        function decrement1() {
+            count--;
+            updateDisplay();
+        }
+
+        function decrement2() {
+            count -= 2;
+            updateDisplay();
+        }
+
+        function multiply() {
+            count = count * 2;
+            updateDisplay();
+        }
+
+        function division() {
+            count = count / 2;
+            updateDisplay();
+        }
+
+        function reset() {
+            count = 0;
+            updateDisplay();
+        }
+
+        // Initialize display
+        updateDisplay();
+
+        // Event listeners
+        document.getElementById('INCREMENT1').addEventListener('click', increment1);
+        document.getElementById('INCREMENT2').addEventListener('click', increment2);
+        document.getElementById('DEC1').addEventListener('click', decrement1);
+        document.getElementById('DEC2').addEventListener('click', decrement2);
+        document.getElementById('MUL').addEventListener('click', multiply);
+        document.getElementById('DIV').addEventListener('click', division);
+        document.getElementById('RESET').addEventListener('click', reset);
+    </script>
+</body>
+</html>

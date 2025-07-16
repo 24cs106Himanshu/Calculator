@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Basic Calculator</title>
+</head>
+<body style="display: flex; justify-content: center; align-items: center; height: 100vh; background: #f0f0f0; font-family: Arial, sans-serif;">
+
+  <div style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    <h2 style="text-align: center;">Calculator</h2>
+    
+    <input id="counter" type="text" style="width: 100%; padding: 10px; font-size: 18px; text-align: right; margin-bottom: 10px;" disabled>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 60px); gap: 10px; justify-content: center;">
+      <button onclick="append('7')" style="padding: 10px;">7</button>
+      <button onclick="append('8')" style="padding: 10px;">8</button>
+      <button onclick="append('9')" style="padding: 10px;">9</button>
+      <button onclick="append('/')" style="padding: 10px;">/</button>
+
+      <button onclick="append('4')"style="padding: 10px;">4</button>
+      <button onclick="append('5')"style="padding: 10px;">5</button>
+      <button onclick="append('6')"style="padding: 10px;">6</button>
+      <button onclick="append('*')"style="padding: 10px;">*</button>
+
+      <button onclick="append('1')"style="padding: 10px;">1</button>
+      <button onclick="append('2')"style="padding: 10px;">2</button>
+      <button onclick="append('3')"style="padding: 10px;">3</button>
+      <button onclick="append('-')"style="padding: 10px;">-</button>
+
+      <button onclick="append('0')"style="padding: 10px;">0</button>
+      <button onclick="append('.')"style="padding: 10px;">.</button>
+      <button onclick="append('=')"style="padding: 10px;">=</button>
+      <button onclick="append('+')" style="padding: 10px;">+</button>
+      <button class="clear" style="grid-column: span 4;" onclick="cleardisplay()">CLEAR</button>
+    </div>
+  </div>
+
+</body>
+</html>
