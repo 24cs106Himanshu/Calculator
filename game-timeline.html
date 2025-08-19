@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Timeline - GameWiki</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-link:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .timeline-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .filter-group select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary-color), var(--secondary-color));
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 100%;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 0;
+            margin-right: 52%;
+            text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 52%;
+            margin-right: 0;
+            text-align: left;
+        }
+        
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid var(--primary-color);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-marker.major {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-color);
+            border-color: white;
+        }
+        
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .timeline-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-title {
+            justify-content: flex-end;
+        }
+        
+        .timeline-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .timeline-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-tags {
+            justify-content: flex-end;
+        }
+        
+        .tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .tag.expansion { background: var(--accent-color); }
+        .tag.update { background: var(--success-color); }
+        .tag.dlc { background: var(--warning-color); }
+        
+        .timeline-image {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .timeline-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-stats {
+            justify-content: flex-end;
+        }
+        
+        .era-divider {
+            text-align: center;
+            margin: 4rem 0;
+            position: relative;
+        }
+        
+        .era-title {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: inline-block;
+            box-shadow: var(--shadow);
+            border: 4px solid var(--primary-color);
+        }
+        
+        .timeline-legend {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .legend-items {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .legend-marker {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 50px;
+                margin-right: 0;
+                text-align: left;
+            }
+            
+            .timeline-marker {
+                left: 20px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-title {
+                justify-content: flex-start;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-tags,
+            .timeline-item:nth-child(odd) .timeline-stats {
+                justify-content: flex-start;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .timeline-filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to GameWiki
+    </a>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-clock"></i> Gaming Timeline</h1>
+            <p>Explore the evolution of gaming through major releases, updates, and expansions</p>
+        </div>
+        
+        <div class="timeline-filters">
+            <div class="filter-group">
+                <label>Genre:</label>
+                <select id="genreFilter">
+                    <option value="">All Genres</option>
+                    <option value="rpg">RPG</option>
+                    <option value="fps">FPS</option>
+                    <option value="strategy">Strategy</option>
+                    <option value="mmorpg">MMORPG</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Platform:</label>
+                <select id="platformFilter">
+                    <option value="">All Platforms</option>
+                    <option value="pc">PC</option>
+                    <option value="playstation">PlayStation</option>
+                    <option value="xbox">Xbox</option>
+                    <option value="nintendo">Nintendo</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Type:</label>
+                <select id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="release">Game Releases</option>
+                    <option value="expansion">Expansions</option>
+                    <option value="update">Major Updates</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Year:</label>
+                <select id="yearFilter">
+                    <option value="">All Years</option>
+                    <option value="2024">2024</option>
+                    <option value="2023">2023</option>
+                    <option value="2022">2022</option>
+                    <option value="2021">2021</option>
+                    <option value="2020">2020</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="timeline-legend">
+            <h3 style="text-align: center; margin-bottom: 1rem; color: var(--text-dark);">Legend</h3>
+            <div class="legend-items">
+                <div class="legend-item">
+                    <div class="legend-marker" style="background: var(--primary-color);"></div>
+                    <span>Game Release</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-marker" style="background: var(--accent-color);"></div>
+                    <span>Expansion</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-marker" style="background: var(--success-color);"></div>
+                    <span>Major Update</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-marker" style="background: var(--warning-color);"></div>
+                    <span>DLC</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline" id="gameTimeline">
+            <!-- Timeline items will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <script>
+        class GameTimeline {
+            constructor() {
+                this.timelineData = [];
+                this.filteredData = [];
+                this.init();
+            }
+            
+            init() {
+                this.loadTimelineData();
+                this.setupEventListeners();
+                this.renderTimeline();
+            }
+            
+            setupEventListeners() {
+                const filters = ['genreFilter', 'platformFilter', 'typeFilter', 'yearFilter'];
+                filters.forEach(filterId => {
+                    document.getElementById(filterId).addEventListener('change', () => {
+                        this.applyFilters();
+                    });
+                });
+            }
+            
+            loadTimelineData() {
+                this.timelineData = [
+                    {
+                        id: 1,
+                        date: '2024-01-25',
+                        title: 'Granblue Fantasy Relink',
+                        description: 'Action RPG featuring beautiful visuals and cooperative gameplay. Based on the popular mobile game.',
+                        type: 'release',
+                        genre: 'rpg',
+                        platform: 'playstation',
+                        icon: 'fas fa-gamepad',
+                        stats: ['4.2M copies sold', '92% positive reviews'],
+                        tags: ['release', 'rpg']
+                    },
+                    {
+                        id: 2,
+                        date: '2024-01-19',
+                        title: 'Enshrouded Early Access',
+                        description: 'Survival action RPG set in a voxel-based fantasy world. Players can build, craft, and explore together.',
+                        type: 'release',
+                        genre: 'rpg',
+                        platform: 'pc',
+                        icon: 'fas fa-hammer',
+                        stats: ['1M+ players', '85% positive'],
+                        tags: ['release', 'survival']
+                    },
+                    {
+                        id: 3,
+                        date: '2023-12-07',
+                        title: 'The Game Awards 2023',
+                        description: 'Annual gaming awards ceremony. Baldur\'s Gate 3 wins Game of the Year.',
+                        type: 'event',
+                        genre: 'all',
+                        platform: 'all',
+                        icon: 'fas fa-trophy',
+                        stats: ['118M viewers', '30+ awards'],
+                        tags: ['event', 'awards']
+                    },
+                    {
+                        id: 4,
+                        date: '2023-10-12',
+                        title: 'Spider-Man 2',
+                        description: 'PlayStation 5 exclusive featuring both Peter Parker and Miles Morales in an expanded New York City.',
+                        type: 'release',
+                        genre: 'action',
+                        platform: 'playstation',
+                        icon: 'fas fa-spider',
+                        stats: ['5M copies in 11 days', '90 Metacritic'],
+                        tags: ['release', 'exclusive']
+                    },
+                    {
+                        id: 5,
+                        date: '2023-09-22',
+                        title: 'Cyberpunk 2077: Phantom Liberty',
+                        description: 'Major expansion for Cyberpunk 2077 featuring Keanu Reeves and a new storyline in Night City.',
+                        type: 'expansion',
+                        genre: 'rpg',
+                        platform: 'pc',
+                        icon: 'fas fa-robot',
+                        stats: ['3M copies sold', '89% positive reviews'],
+                        tags: ['expansion', 'dlc']
+                    },
+                    {
+                        id: 6,
+                        date: '2023-08-03',
+                        title: 'Baldur\'s Gate 3 Release',
+                        description: 'Full release of the highly anticipated D&D-based RPG after successful early access period.',
+                        type: 'release',
+                        genre: 'rpg',
+                        platform: 'pc',
+                        icon: 'fas fa-dice-d20',
+                        stats: ['22M copies sold', '96 Metacritic'],
+                        tags: ['release', 'rpg']
+                    },
+                    {
+                        id: 7,
+                        date: '2023-06-11',
+                        title: 'Diablo 4 Launch',
+                        description: 'The long-awaited return of the Diablo franchise with always-online gameplay and seasonal content.',
+                        type: 'release',
+                        genre: 'rpg',
+                        platform: 'pc',
+                        icon: 'fas fa-fire',
+                        stats: ['12M players', '$666M revenue'],
+                        tags: ['release', 'arpg']
+                    },
+                    {
+                        id: 8,
+                        date: '2023-05-12',
+                        title: 'The Legend of Zelda: Tears of the Kingdom',
+                        description: 'Sequel to Breath of the Wild featuring new building mechanics and expanded Hyrule.',
+                        type: 'release',
+                        genre: 'adventure',
+                        platform: 'nintendo',
+                        icon: 'fas fa-leaf',
+                        stats: ['18.5M copies', '96 Metacritic'],
+                        tags: ['release', 'adventure']
+                    },
+                    {
+                        id: 9,
+                        date: '2023-03-24',
+                        title: 'Resident Evil 4 Remake',
+                        description: 'Complete remake of the classic survival horror game with modern graphics and gameplay.',
+                        type: 'release',
+                        genre: 'horror',
+                        platform: 'playstation',
+                        icon: 'fas fa-biohazard',
+                        stats: ['7M copies', '93 Metacritic'],
+                        tags: ['release', 'remake']
+                    },
+                    {
+                        id: 10,
+                        date: '2023-02-10',
+                        title: 'Hogwarts Legacy',
+                        description: 'Open-world action RPG set in the Harry Potter universe, allowing players to attend Hogwarts.',
+                        type: 'release',
+                        genre: 'rpg',
+                        platform: 'pc',
+                        icon: 'fas fa-magic',
+                        stats: ['22M copies', '84 Metacritic'],
+                        tags: ['release', 'open-world']
+                    },
+                    {
+                        id: 11,
+                        date: '2022-11-09',
+                        title: 'God of War Ragnarök',
+                        description: 'Epic conclusion to the Norse saga of Kratos and Atreus with stunning visuals and storytelling.',
+                        type: 'release',
+                        genre: 'action',
+                        platform: 'playstation',
+                        icon: 'fas fa-axe',
+                        stats: ['15M copies', '94 Metacritic'],
+                        tags: ['release', 'action']
+                    },
+                    {
+                        id: 12,
+                        date: '2022-02-25',
+                        title: 'Elden Ring Launch',
+                        description: 'FromSoftware\'s open-world souls-like RPG created in collaboration with George R.R. Martin.',
+                        type: 'release',
+                        genre: 'rpg',
+                        platform: 'pc',
+                        icon: 'fas fa-ring',
+                        stats: ['20M copies', '96 Metacritic'],
+                        tags: ['release', 'souls-like']
+                    },
+                    {
+                        id: 13,
+                        date: '2020-12-10',
+                        title: 'Cyberpunk 2077 Launch',
+                        description: 'Highly anticipated futuristic RPG launch with initial technical issues but major updates over time.',
+                        type: 'release',
+                        genre: 'rpg',
+                        platform: 'pc',
+                        icon: 'fas fa-city',
+                        stats: ['25M copies', 'Major updates'],
+                        tags: ['release', 'controversial']
+                    }
+                ];
+                
+                this.filteredData = [...this.timelineData];
+            }
+            
+            applyFilters() {
+                const genreFilter = document.getElementById('genreFilter').value;
+                const platformFilter = document.getElementById('platformFilter').value;
+                const typeFilter = document.getElementById('typeFilter').value;
+                const yearFilter = document.getElementById('yearFilter').value;
+                
+                this.filteredData = this.timelineData.filter(item => {
+                    const itemYear = new Date(item.date).getFullYear().toString();
+                    
+                    return (!genreFilter || item.genre === genreFilter || item.genre === 'all') &&
+                           (!platformFilter || item.platform === platformFilter || item.platform === 'all') &&
+                           (!typeFilter || item.type === typeFilter) &&
+                           (!yearFilter || itemYear === yearFilter);
+                });
+                
+                this.renderTimeline();
+            }
+            
+            renderTimeline() {
+                const timeline = document.getElementById('gameTimeline');
+                
+                if (this.filteredData.length === 0) {
+                    timeline.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: var(--text-light); background: rgba(255,255,255,0.95); border-radius: 15px;">
+                            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p>No timeline events found matching your criteria.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Sort by date (newest first)
+                const sortedData = [...this.filteredData].sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                let currentYear = null;
+                let html = '';
+                
+                sortedData.forEach((item, index) => {
+                    const itemYear = new Date(item.date).getFullYear();
+                    
+                    // Add year divider
+                    if (currentYear !== itemYear) {
+                        if (currentYear !== null) {
+                            html += `<div class="era-divider"><div class="era-title">${itemYear}</div></div>`;
+                        } else {
+                            html += `<div class="era-divider"><div class="era-title">${itemYear}</div></div>`;
+                        }
+                        currentYear = itemYear;
+                    }
+                    
+                    const formattedDate = new Date(item.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    
+                    const markerClass = item.type === 'release' ? 'major' : '';
+                    
+                    html += `
+                        <div class="timeline-item">
+                            <div class="timeline-marker ${markerClass}"></div>
+                            <div class="timeline-content">
+                                <div class="timeline-date">${formattedDate}</div>
+                                <h3 class="timeline-title">
+                                    <i class="${item.icon}"></i>
+                                    ${item.title}
+                                </h3>
+                                <div class="timeline-tags">
+                                    ${item.tags.map(tag => `<span class="tag ${tag}">${tag}</span>`).join('')}
+                                </div>
+                                <div class="timeline-image">
+                                    <i class="${item.icon}"></i>
+                                </div>
+                                <p class="timeline-description">${item.description}</p>
+                                <div class="timeline-stats">
+                                    ${item.stats.map(stat => `<span><i class="fas fa-chart-line"></i> ${stat}</span>`).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                timeline.innerHTML = html;
+            }
+        }
+        
+        // Initialize the timeline
+        document.addEventListener('DOMContentLoaded', () => {
+            new GameTimeline();
+        });
+    </script>
+</body>
+</html>

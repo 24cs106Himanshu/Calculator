@@ -3,78 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
+    <title>GameWiki - The Ultimate Gaming Knowledge Hub</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h1>Counter</h1>
-        <h1 id="counter">0</h1>
-        
-        <div class="button-container">
-            <button id="INCREMENT1">+1</button>
-            <button id="INCREMENT2">+2</button>
-            <button id="DEC1">-1</button>
-            <button id="DEC2">-2</button>
-            <button id="MUL">×2</button>
-            <button id="DIV">÷2</button>
-            <button id="RESET">Reset</button>
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-gamepad"></i>
+                <span>GameWiki</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="#home" class="nav-link active" data-section="home">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#games" class="nav-link" data-section="games">
+                    <i class="fas fa-gamepad"></i> Games
+                </a>
+                <a href="#guides" class="nav-link" data-section="guides">
+                    <i class="fas fa-book"></i> Guides
+                </a>
+                <a href="#community" class="nav-link" data-section="community">
+                    <i class="fas fa-users"></i> Community
+                </a>
+                <a href="#profile" class="nav-link" data-section="profile">
+                    <i class="fas fa-user"></i> Profile
+                </a>
+                <a href="game-timeline.html" class="nav-link" target="_blank">
+                    <i class="fas fa-clock"></i> Timeline
+                </a>
+            </nav>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search games, guides, or content...">
+                <button id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Home Section -->
+        <section id="home-section" class="content-section active">
+            <div class="hero">
+                <h1>Welcome to GameWiki</h1>
+                <p>The ultimate community-driven gaming knowledge hub</p>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">1,247</span>
+                        <span class="stat-label">Games</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">15,832</span>
+                        <span class="stat-label">Guides</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">89,456</span>
+                        <span class="stat-label">Contributors</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="featured-section">
+                <h2><i class="fas fa-star"></i> Featured Content</h2>
+                <div class="featured-grid">
+                    <div class="featured-card game-card" data-game="cyberpunk2077">
+                        <div class="card-image">
+                            <div class="game-placeholder">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Cyberpunk 2077</h3>
+                            <p>Complete guide to Night City</p>
+                            <div class="card-tags">
+                                <span class="tag">RPG</span>
+                                <span class="tag">Open World</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="featured-card guide-card" onclick="window.open('interactive-map.html', '_blank')">
+                        <div class="card-image">
+                            <div class="guide-placeholder">
+                                <i class="fas fa-map"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Interactive Night City Map</h3>
+                            <p>Explore Night City with clickable markers</p>
+                            <div class="card-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> 247 markers</span>
+                                <span><i class="fas fa-users"></i> Community-driven</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="featured-card community-card" onclick="window.open('build-sharing.html', '_blank')">
+                        <div class="card-image">
+                            <div class="community-placeholder">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                        </div>
+                        <div class="card-content">
+                            <h3>Build Sharing Hub</h3>
+                            <p>Share and discover character builds</p>
+                            <div class="card-meta">
+                                <span><i class="fas fa-share"></i> 1,247 builds shared</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-activity">
+                <h2><i class="fas fa-clock"></i> Recent Activity</h2>
+                <div class="activity-feed">
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-edit"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>GameMaster92</strong> updated the <a href="#">Baldur's Gate 3</a> character build guide</p>
+                            <span class="activity-time">2 hours ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-plus"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p><strong>MapExplorer</strong> added interactive map for <a href="#">Hogwarts Legacy</a></p>
+                            <span class="activity-time">4 hours ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p>New discussion: <a href="#">Best loadouts for MW3</a> in Community Forum</p>
+                            <span class="activity-time">6 hours ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Games Section -->
+        <section id="games-section" class="content-section">
+            <div class="section-header">
+                <h1><i class="fas fa-gamepad"></i> Game Library</h1>
+                <div class="section-filters">
+                    <select id="platform-filter">
+                        <option value="">All Platforms</option>
+                        <option value="pc">PC</option>
+                        <option value="playstation">PlayStation</option>
+                        <option value="xbox">Xbox</option>
+                        <option value="nintendo">Nintendo</option>
+                        <option value="mobile">Mobile</option>
+                    </select>
+                    <select id="genre-filter">
+                        <option value="">All Genres</option>
+                        <option value="action">Action</option>
+                        <option value="rpg">RPG</option>
+                        <option value="strategy">Strategy</option>
+                        <option value="fps">FPS</option>
+                        <option value="mmorpg">MMORPG</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="games-grid" id="games-grid">
+                <!-- Games will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Guides Section -->
+        <section id="guides-section" class="content-section">
+            <div class="section-header">
+                <h1><i class="fas fa-book"></i> Guides & Walkthroughs</h1>
+                <div class="guide-categories">
+                    <button class="category-btn active" data-category="all">All Guides</button>
+                    <button class="category-btn" data-category="walkthrough">Walkthroughs</button>
+                    <button class="category-btn" data-category="builds">Builds</button>
+                    <button class="category-btn" data-category="achievements">Achievements</button>
+                    <button class="category-btn" data-category="speedrun">Speedruns</button>
+                </div>
+            </div>
+
+            <div class="guides-grid" id="guides-grid">
+                <!-- Guides will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Community Section -->
+        <section id="community-section" class="content-section">
+            <div class="section-header">
+                <h1><i class="fas fa-users"></i> Community Hub</h1>
+            </div>
+
+            <div class="community-tabs">
+                <button class="tab-btn active" data-tab="forums">Forums</button>
+                <button class="tab-btn" data-tab="polls">Polls & Rankings</button>
+                <button class="tab-btn" data-tab="fanart">Fan Art & Mods</button>
+                <button class="tab-btn" data-tab="leaderboard">Contributors</button>
+            </div>
+
+            <div class="community-content">
+                <div id="forums-tab" class="tab-content active">
+                    <div class="forums-list">
+                        <!-- Forum content -->
+                    </div>
+                </div>
+                <div id="polls-tab" class="tab-content">
+                    <div class="polls-container">
+                        <!-- Polls content -->
+                    </div>
+                </div>
+                <div id="fanart-tab" class="tab-content">
+                    <div class="fanart-gallery">
+                        <!-- Fan art content -->
+                    </div>
+                </div>
+                <div id="leaderboard-tab" class="tab-content">
+                    <div class="leaderboard">
+                        <!-- Leaderboard content -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile-section" class="content-section">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="profile-info">
+                    <h1>GamerPro123</h1>
+                    <p class="profile-title">Lore Master • Map Maker</p>
+                    <div class="profile-stats">
+                        <div class="profile-stat">
+                            <span class="stat-number">47</span>
+                            <span class="stat-label">Contributions</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="stat-number">12</span>
+                            <span class="stat-label">Badges</span>
+                        </div>
+                        <div class="profile-stat">
+                            <span class="stat-number">1,234</span>
+                            <span class="stat-label">Reputation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="profile-badges">
+                    <h2><i class="fas fa-medal"></i> Badges</h2>
+                    <div class="badges-grid">
+                        <div class="badge earned">
+                            <i class="fas fa-book"></i>
+                            <span>Lore Master</span>
+                        </div>
+                        <div class="badge earned">
+                            <i class="fas fa-map"></i>
+                            <span>Map Maker</span>
+                        </div>
+                        <div class="badge earned">
+                            <i class="fas fa-star"></i>
+                            <span>First Contributor</span>
+                        </div>
+                        <div class="badge">
+                            <i class="fas fa-trophy"></i>
+                            <span>Achievement Hunter</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-achievements">
+                    <h2><i class="fas fa-trophy"></i> Achievement Tracker</h2>
+                    <div class="achievement-progress">
+                        <div class="achievement-game">
+                            <h3>The Witcher 3: Wild Hunt</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 78%"></div>
+                                <span class="progress-text">78% (39/50)</span>
+                            </div>
+                        </div>
+                        <div class="achievement-game">
+                            <h3>Cyberpunk 2077</h3>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 45%"></div>
+                                <span class="progress-text">45% (23/51)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Game Detail Modal -->
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="game-detail-content">
+                <!-- Game details will be loaded here -->
+            </div>
         </div>
     </div>
 
-    <script>
-        let count = 0;
-
-        function updateDisplay() {
-            document.getElementById("counter").innerText = count;
-        }
-
-        function increment1() {
-            count++;
-            updateDisplay();
-        }
-
-        function increment2() {
-            count += 2;
-            updateDisplay();
-        }
-
-        function decrement1() {
-            count--;
-            updateDisplay();
-        }
-
-        function decrement2() {
-            count -= 2;
-            updateDisplay();
-        }
-
-        function multiply() {
-            count = count * 2;
-            updateDisplay();
-        }
-
-        function division() {
-            count = count / 2;
-            updateDisplay();
-        }
-
-        function reset() {
-            count = 0;
-            updateDisplay();
-        }
-
-        // Initialize display
-        updateDisplay();
-
-        // Event listeners
-        document.getElementById('INCREMENT1').addEventListener('click', increment1);
-        document.getElementById('INCREMENT2').addEventListener('click', increment2);
-        document.getElementById('DEC1').addEventListener('click', decrement1);
-        document.getElementById('DEC2').addEventListener('click', decrement2);
-        document.getElementById('MUL').addEventListener('click', multiply);
-        document.getElementById('DIV').addEventListener('click', division);
-        document.getElementById('RESET').addEventListener('click', reset);
-    </script>
+    <!-- Scripts -->
+    <script src="script.js"></script>
 </body>
 </html>
