@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Game Map - GameWiki</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3436;
+        }
+        
+        .map-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .map-title {
+            font-size: 2rem;
+            color: #6c5ce7;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .map-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .layer-toggle {
+            padding: 0.5rem 1rem;
+            border: 2px solid #6c5ce7;
+            background: transparent;
+            color: #6c5ce7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .layer-toggle.active {
+            background: #6c5ce7;
+            color: white;
+        }
+        
+        .interactive-map {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            border-radius: 15px;
+            overflow: hidden;
+            cursor: crosshair;
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #fd79a8;
+            border: 3px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .map-marker:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+        
+        .map-marker.treasure { background: #fdcb6e; }
+        .map-marker.enemy { background: #e17055; }
+        .map-marker.npc { background: #00b894; }
+        .map-marker.location { background: #6c5ce7; }
+        
+        .marker-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .map-marker:hover .marker-tooltip {
+            opacity: 1;
+        }
+        
+        .marker-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .map-legend {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .legend-marker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-marker.treasure { background: #fdcb6e; }
+        .legend-marker.enemy { background: #e17055; }
+        .legend-marker.npc { background: #00b894; }
+        .legend-marker.location { background: #6c5ce7; }
+        
+        .add-marker-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: none;
+        }
+        
+        .add-marker-form.show {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #6c5ce7;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #636e72;
+            color: white;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #6c5ce7;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to GameWiki
+    </a>
+    
+    <div class="map-container">
+        <div class="map-header">
+            <h1 class="map-title">
+                <i class="fas fa-map"></i>
+                Night City - Cyberpunk 2077
+            </h1>
+            <div class="map-controls">
+                <button class="layer-toggle active" data-layer="all">All</button>
+                <button class="layer-toggle" data-layer="treasure">Treasures</button>
+                <button class="layer-toggle" data-layer="enemy">Enemies</button>
+                <button class="layer-toggle" data-layer="npc">NPCs</button>
+                <button class="layer-toggle" data-layer="location">Locations</button>
+            </div>
+        </div>
+        
+        <div class="interactive-map" id="gameMap">
+            <!-- Map markers will be dynamically added here -->
+        </div>
+        
+        <div class="map-legend">
+            <div class="legend-item">
+                <div class="legend-marker treasure"></div>
+                <span>Treasure/Items</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-marker enemy"></div>
+                <span>Enemies/Bosses</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-marker npc"></div>
+                <span>NPCs/Vendors</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-marker location"></div>
+                <span>Key Locations</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="add-marker-form" id="markerForm">
+        <h3>Add New Marker</h3>
+        <form id="addMarkerForm">
+            <div class="form-group">
+                <label for="markerName">Name:</label>
+                <input type="text" id="markerName" required>
+            </div>
+            <div class="form-group">
+                <label for="markerType">Type:</label>
+                <select id="markerType" required>
+                    <option value="treasure">Treasure/Items</option>
+                    <option value="enemy">Enemy/Boss</option>
+                    <option value="npc">NPC/Vendor</option>
+                    <option value="location">Key Location</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="markerDescription">Description:</label>
+                <textarea id="markerDescription" rows="3"></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeMarkerForm()">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add Marker</button>
+            </div>
+        </form>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        class InteractiveMap {
+            constructor() {
+                this.markers = [];
+                this.currentFilter = 'all';
+                this.pendingMarker = null;
+                this.init();
+            }
+            
+            init() {
+                this.setupEventListeners();
+                this.loadSampleMarkers();
+                this.renderMarkers();
+            }
+            
+            setupEventListeners() {
+                const map = document.getElementById('gameMap');
+                const layerToggles = document.querySelectorAll('.layer-toggle');
+                const form = document.getElementById('addMarkerForm');
+                
+                map.addEventListener('click', (e) => this.handleMapClick(e));
+                
+                layerToggles.forEach(toggle => {
+                    toggle.addEventListener('click', (e) => this.handleLayerToggle(e));
+                });
+                
+                form.addEventListener('submit', (e) => this.handleFormSubmit(e));
+            }
+            
+            handleMapClick(e) {
+                const rect = e.target.getBoundingClientRect();
+                const x = ((e.clientX - rect.left) / rect.width) * 100;
+                const y = ((e.clientY - rect.top) / rect.height) * 100;
+                
+                this.pendingMarker = { x, y };
+                this.showMarkerForm();
+            }
+            
+            handleLayerToggle(e) {
+                const layer = e.target.dataset.layer;
+                
+                document.querySelectorAll('.layer-toggle').forEach(toggle => {
+                    toggle.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                
+                this.currentFilter = layer;
+                this.renderMarkers();
+            }
+            
+            handleFormSubmit(e) {
+                e.preventDefault();
+                
+                if (!this.pendingMarker) return;
+                
+                const name = document.getElementById('markerName').value;
+                const type = document.getElementById('markerType').value;
+                const description = document.getElementById('markerDescription').value;
+                
+                const marker = {
+                    id: Date.now(),
+                    name,
+                    type,
+                    description,
+                    x: this.pendingMarker.x,
+                    y: this.pendingMarker.y
+                };
+                
+                this.markers.push(marker);
+                this.renderMarkers();
+                this.closeMarkerForm();
+                
+                // Save to localStorage
+                localStorage.setItem('gameMapMarkers', JSON.stringify(this.markers));
+                
+                this.showNotification('Marker added successfully!', 'success');
+            }
+            
+            showMarkerForm() {
+                const form = document.getElementById('markerForm');
+                form.classList.add('show');
+                document.getElementById('markerName').focus();
+            }
+            
+            closeMarkerForm() {
+                const form = document.getElementById('markerForm');
+                form.classList.remove('show');
+                document.getElementById('addMarkerForm').reset();
+                this.pendingMarker = null;
+            }
+            
+            renderMarkers() {
+                const map = document.getElementById('gameMap');
+                map.innerHTML = '';
+                
+                const filteredMarkers = this.currentFilter === 'all' 
+                    ? this.markers 
+                    : this.markers.filter(marker => marker.type === this.currentFilter);
+                
+                filteredMarkers.forEach(marker => {
+                    const markerElement = document.createElement('div');
+                    markerElement.className = `map-marker ${marker.type}`;
+                    markerElement.style.left = `${marker.x}%`;
+                    markerElement.style.top = `${marker.y}%`;
+                    
+                    const icon = this.getMarkerIcon(marker.type);
+                    markerElement.innerHTML = `
+                        <i class="${icon}"></i>
+                        <div class="marker-tooltip">
+                            <strong>${marker.name}</strong><br>
+                            ${marker.description || 'No description'}
+                        </div>
+                    `;
+                    
+                    map.appendChild(markerElement);
+                });
+            }
+            
+            getMarkerIcon(type) {
+                const icons = {
+                    treasure: 'fas fa-gem',
+                    enemy: 'fas fa-skull',
+                    npc: 'fas fa-user',
+                    location: 'fas fa-map-marker-alt'
+                };
+                return icons[type] || 'fas fa-map-marker-alt';
+            }
+            
+            loadSampleMarkers() {
+                // Try to load from localStorage first
+                const saved = localStorage.getItem('gameMapMarkers');
+                if (saved) {
+                    this.markers = JSON.parse(saved);
+                    return;
+                }
+                
+                // Sample markers
+                this.markers = [
+                    {
+                        id: 1,
+                        name: 'Legendary Katana',
+                        type: 'treasure',
+                        description: 'Hidden legendary weapon in the alley',
+                        x: 25,
+                        y: 40
+                    },
+                    {
+                        id: 2,
+                        name: 'Cyberpsycho Sighting',
+                        type: 'enemy',
+                        description: 'Dangerous cyberpsycho encounter',
+                        x: 60,
+                        y: 30
+                    },
+                    {
+                        id: 3,
+                        name: 'Ripperdoc Clinic',
+                        type: 'npc',
+                        description: 'Upgrade your cyberware here',
+                        x: 45,
+                        y: 65
+                    },
+                    {
+                        id: 4,
+                        name: 'Arasaka Tower',
+                        type: 'location',
+                        description: 'Corporate headquarters',
+                        x: 70,
+                        y: 20
+                    },
+                    {
+                        id: 5,
+                        name: 'Iconic Pistol',
+                        type: 'treasure',
+                        description: 'Rare weapon drop from boss',
+                        x: 80,
+                        y: 55
+                    }
+                ];
+            }
+            
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 3000;
+                    transform: translateX(400px);
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                    background: ${type === 'success' ? '#00b894' : '#6c5ce7'};
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                    notification.style.opacity = '1';
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+        
+        function closeMarkerForm() {
+            window.interactiveMap.closeMarkerForm();
+        }
+        
+        // Initialize the interactive map
+        document.addEventListener('DOMContentLoaded', () => {
+            window.interactiveMap = new InteractiveMap();
+        });
+    </script>
+</body>
+</html>

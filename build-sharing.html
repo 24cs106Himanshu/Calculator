@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Build Sharing - GameWiki</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #a29bfe;
+            --accent-color: #fd79a8;
+            --success-color: #00b894;
+            --warning-color: #fdcb6e;
+            --error-color: #e17055;
+            --dark-bg: #2d3436;
+            --light-bg: #ddd6fe;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --border-color: #e0e0e0;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .back-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        
+        .back-link:hover {
+            background: white;
+            transform: translateY(-2px);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem 2rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .page-header h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+        }
+        
+        .build-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: var(--border-color);
+            color: var(--text-dark);
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .builds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .build-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .build-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .build-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+        }
+        
+        .build-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .build-game {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .build-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: var(--warning-color);
+        }
+        
+        .build-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .tag {
+            background: var(--light-bg);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .build-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .build-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+        
+        .build-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+        
+        .build-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .build-interactions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .interaction-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            transition: color 0.3s ease;
+        }
+        
+        .interaction-btn:hover {
+            color: var(--primary-color);
+        }
+        
+        .interaction-btn.liked {
+            color: var(--accent-color);
+        }
+        
+        .build-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+        
+        .build-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s ease;
+        }
+        
+        .modal-close:hover {
+            color: var(--error-color);
+        }
+        
+        .build-detail {
+            margin-top: 1rem;
+        }
+        
+        .build-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .equipment-list, .skill-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .equipment-item, .skill-item {
+            background: var(--light-bg);
+            padding: 1rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .item-level {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 5px;
+            font-size: 0.8rem;
+        }
+        
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .filter-group select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+        }
+        
+        .create-build-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            display: none;
+        }
+        
+        .create-build-form.show {
+            display: block;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .builds-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .build-sections {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .page-header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Back to GameWiki
+    </a>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-cogs"></i> Build Sharing Hub</h1>
+            <p>Share and discover the best character builds across all games</p>
+        </div>
+        
+        <div class="build-actions">
+            <button class="btn btn-primary" onclick="showCreateForm()">
+                <i class="fas fa-plus"></i> Create New Build
+            </button>
+            <button class="btn btn-secondary" onclick="importBuild()">
+                <i class="fas fa-download"></i> Import Build
+            </button>
+        </div>
+        
+        <div class="filters">
+            <div class="filter-group">
+                <label>Game:</label>
+                <select id="gameFilter">
+                    <option value="">All Games</option>
+                    <option value="cyberpunk2077">Cyberpunk 2077</option>
+                    <option value="eldenring">Elden Ring</option>
+                    <option value="baldursgate3">Baldur's Gate 3</option>
+                    <option value="diablo4">Diablo 4</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Type:</label>
+                <select id="typeFilter">
+                    <option value="">All Types</option>
+                    <option value="dps">DPS</option>
+                    <option value="tank">Tank</option>
+                    <option value="support">Support</option>
+                    <option value="hybrid">Hybrid</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Difficulty:</label>
+                <select id="difficultyFilter">
+                    <option value="">All Levels</option>
+                    <option value="beginner">Beginner</option>
+                    <option value="intermediate">Intermediate</option>
+                    <option value="advanced">Advanced</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Sort by:</label>
+                <select id="sortFilter">
+                    <option value="rating">Rating</option>
+                    <option value="newest">Newest</option>
+                    <option value="popular">Most Popular</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="builds-grid" id="buildsGrid">
+            <!-- Builds will be populated by JavaScript -->
+        </div>
+        
+        <div class="create-build-form" id="createBuildForm">
+            <h2><i class="fas fa-plus"></i> Create New Build</h2>
+            <form id="buildForm">
+                <div class="form-grid">
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="buildTitle">Build Name:</label>
+                            <input type="text" id="buildTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="buildGame">Game:</label>
+                            <select id="buildGame" required>
+                                <option value="">Select Game</option>
+                                <option value="cyberpunk2077">Cyberpunk 2077</option>
+                                <option value="eldenring">Elden Ring</option>
+                                <option value="baldursgate3">Baldur's Gate 3</option>
+                                <option value="diablo4">Diablo 4</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="buildType">Build Type:</label>
+                            <select id="buildType" required>
+                                <option value="">Select Type</option>
+                                <option value="dps">DPS</option>
+                                <option value="tank">Tank</option>
+                                <option value="support">Support</option>
+                                <option value="hybrid">Hybrid</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="buildDifficulty">Difficulty:</label>
+                            <select id="buildDifficulty" required>
+                                <option value="">Select Difficulty</option>
+                                <option value="beginner">Beginner</option>
+                                <option value="intermediate">Intermediate</option>
+                                <option value="advanced">Advanced</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="buildDescription">Description:</label>
+                            <textarea id="buildDescription" rows="4" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="buildTags">Tags (comma-separated):</label>
+                            <input type="text" id="buildTags" placeholder="e.g., stealth, ranged, endgame">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideCreateForm()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Build</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="build-modal" id="buildModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeBuildModal()">&times;</button>
+            <div id="buildDetailContent">
+                <!-- Build details will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        class BuildSharingHub {
+            constructor() {
+                this.builds = [];
+                this.likedBuilds = new Set();
+                this.init();
+            }
+            
+            init() {
+                this.loadSampleBuilds();
+                this.setupEventListeners();
+                this.renderBuilds();
+                this.loadLikedBuilds();
+            }
+            
+            setupEventListeners() {
+                const filters = ['gameFilter', 'typeFilter', 'difficultyFilter', 'sortFilter'];
+                filters.forEach(filterId => {
+                    document.getElementById(filterId).addEventListener('change', () => {
+                        this.applyFilters();
+                    });
+                });
+                
+                document.getElementById('buildForm').addEventListener('submit', (e) => {
+                    this.handleBuildSubmit(e);
+                });
+            }
+            
+            loadSampleBuilds() {
+                const saved = localStorage.getItem('gameBuilds');
+                if (saved) {
+                    this.builds = JSON.parse(saved);
+                    return;
+                }
+                
+                this.builds = [
+                    {
+                        id: 1,
+                        title: 'Netrunner Stealth Build',
+                        game: 'cyberpunk2077',
+                        gameTitle: 'Cyberpunk 2077',
+                        type: 'dps',
+                        difficulty: 'intermediate',
+                        description: 'Perfect stealth build focusing on hacking and silent takedowns. Ideal for players who prefer avoiding direct combat.',
+                        tags: ['stealth', 'hacking', 'intelligence'],
+                        rating: 4.8,
+                        likes: 247,
+                        author: 'CyberNinja',
+                        createdAt: '2024-01-15',
+                        stats: { damage: 85, defense: 45, utility: 95 },
+                        equipment: [
+                            { name: 'Mantis Blades', level: 'Legendary' },
+                            { name: 'Optical Camo', level: 'Epic' },
+                            { name: 'Cyberdeck', level: 'Legendary' }
+                        ],
+                        skills: [
+                            { name: 'Breach Protocol', level: 20 },
+                            { name: 'Quickhacking', level: 20 },
+                            { name: 'Stealth', level: 18 }
+                        ]
+                    },
+                    {
+                        id: 2,
+                        title: 'Faith Build (Incantations)',
+                        game: 'eldenring',
+                        gameTitle: 'Elden Ring',
+                        type: 'hybrid',
+                        difficulty: 'advanced',
+                        description: 'Powerful faith-based build utilizing incantations for both offense and support. Great for co-op play.',
+                        tags: ['faith', 'incantations', 'support', 'pve'],
+                        rating: 4.6,
+                        likes: 189,
+                        author: 'HolyWarrior',
+                        createdAt: '2024-01-12',
+                        stats: { damage: 75, defense: 80, utility: 85 },
+                        equipment: [
+                            { name: 'Sacred Relic Sword', level: '+10' },
+                            { name: 'Erdtree Seal', level: '+25' },
+                            { name: 'Crucible Tree Armor', level: 'Max' }
+                        ],
+                        skills: [
+                            { name: 'Faith', level: 80 },
+                            { name: 'Vigor', level: 60 },
+                            { name: 'Mind', level: 40 }
+                        ]
+                    },
+                    {
+                        id: 3,
+                        title: 'Paladin Tank Build',
+                        game: 'baldursgate3',
+                        gameTitle: "Baldur's Gate 3",
+                        type: 'tank',
+                        difficulty: 'beginner',
+                        description: 'Classic paladin build focused on tanking and protecting allies. Perfect for new players who want to be the party tank.',
+                        tags: ['paladin', 'tank', 'healing', 'beginner-friendly'],
+                        rating: 4.9,
+                        likes: 312,
+                        author: 'ShieldBearer',
+                        createdAt: '2024-01-10',
+                        stats: { damage: 65, defense: 95, utility: 70 },
+                        equipment: [
+                            { name: 'Plate Armor', level: '+3' },
+                            { name: 'Shield of Devotion', level: '+2' },
+                            { name: 'Sword of Justice', level: '+1' }
+                        ],
+                        skills: [
+                            { name: 'Strength', level: 18 },
+                            { name: 'Constitution', level: 16 },
+                            { name: 'Charisma', level: 14 }
+                        ]
+                    },
+                    {
+                        id: 4,
+                        title: 'Necromancer Army Build',
+                        game: 'diablo4',
+                        gameTitle: 'Diablo 4',
+                        type: 'dps',
+                        difficulty: 'advanced',
+                        description: 'Summon an army of undead minions to do your bidding. High damage output through minion synergy.',
+                        tags: ['necromancer', 'minions', 'summoner', 'endgame'],
+                        rating: 4.7,
+                        likes: 203,
+                        author: 'DeathLord',
+                        createdAt: '2024-01-08',
+                        stats: { damage: 90, defense: 60, utility: 75 },
+                        equipment: [
+                            { name: 'Bone Prison Staff', level: 'Ancestral' },
+                            { name: 'Necromancer Focus', level: 'Sacred' },
+                            { name: 'Death Shroud', level: 'Legendary' }
+                        ],
+                        skills: [
+                            { name: 'Raise Skeleton', level: 5 },
+                            { name: 'Corpse Explosion', level: 5 },
+                            { name: 'Bone Armor', level: 3 }
+                        ]
+                    }
+                ];
+            }
+            
+            renderBuilds(buildsToRender = this.builds) {
+                const grid = document.getElementById('buildsGrid');
+                
+                if (buildsToRender.length === 0) {
+                    grid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-light);">
+                            <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p>No builds found matching your criteria.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                grid.innerHTML = buildsToRender.map(build => `
+                    <div class="build-card" onclick="showBuildDetail(${build.id})">
+                        <div class="build-header">
+                            <div>
+                                <h3 class="build-title">${build.title}</h3>
+                                <p class="build-game">${build.gameTitle}</p>
+                            </div>
+                            <div class="build-rating">
+                                <i class="fas fa-star"></i>
+                                <span>${build.rating}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="build-tags">
+                            ${build.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        
+                        <div class="build-stats">
+                            <div class="stat-item">
+                                <span class="stat-value">${build.stats.damage}</span>
+                                <span class="stat-label">Damage</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">${build.stats.defense}</span>
+                                <span class="stat-label">Defense</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value">${build.stats.utility}</span>
+                                <span class="stat-label">Utility</span>
+                            </div>
+                        </div>
+                        
+                        <p class="build-description">${build.description}</p>
+                        
+                        <div class="build-meta">
+                            <div class="build-author">
+                                <i class="fas fa-user"></i>
+                                <span>${build.author}</span>
+                            </div>
+                            <div class="build-interactions">
+                                <button class="interaction-btn ${this.likedBuilds.has(build.id) ? 'liked' : ''}" 
+                                        onclick="event.stopPropagation(); toggleLike(${build.id})">
+                                    <i class="fas fa-heart"></i>
+                                    <span>${build.likes}</span>
+                                </button>
+                                <button class="interaction-btn" onclick="event.stopPropagation(); shareBuild(${build.id})">
+                                    <i class="fas fa-share"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            applyFilters() {
+                const gameFilter = document.getElementById('gameFilter').value;
+                const typeFilter = document.getElementById('typeFilter').value;
+                const difficultyFilter = document.getElementById('difficultyFilter').value;
+                const sortFilter = document.getElementById('sortFilter').value;
+                
+                let filtered = this.builds.filter(build => {
+                    return (!gameFilter || build.game === gameFilter) &&
+                           (!typeFilter || build.type === typeFilter) &&
+                           (!difficultyFilter || build.difficulty === difficultyFilter);
+                });
+                
+                // Sort builds
+                switch(sortFilter) {
+                    case 'rating':
+                        filtered.sort((a, b) => b.rating - a.rating);
+                        break;
+                    case 'newest':
+                        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                        break;
+                    case 'popular':
+                        filtered.sort((a, b) => b.likes - a.likes);
+                        break;
+                }
+                
+                this.renderBuilds(filtered);
+            }
+            
+            showBuildDetail(buildId) {
+                const build = this.builds.find(b => b.id === buildId);
+                if (!build) return;
+                
+                const modal = document.getElementById('buildModal');
+                const content = document.getElementById('buildDetailContent');
+                
+                content.innerHTML = `
+                    <div class="build-detail">
+                        <div class="build-header">
+                            <div>
+                                <h2 class="build-title">${build.title}</h2>
+                                <p class="build-game">${build.gameTitle} • ${build.type.toUpperCase()} • ${build.difficulty}</p>
+                            </div>
+                            <div class="build-rating">
+                                <i class="fas fa-star"></i>
+                                <span>${build.rating}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="build-tags">
+                            ${build.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        
+                        <p class="build-description">${build.description}</p>
+                        
+                        <div class="build-sections">
+                            <div class="equipment-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-sword"></i>
+                                    Equipment
+                                </h3>
+                                <div class="equipment-list">
+                                    ${build.equipment.map(item => `
+                                        <div class="equipment-item">
+                                            <span class="item-name">${item.name}</span>
+                                            <span class="item-level">${item.level}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            
+                            <div class="skills-section">
+                                <h3 class="section-title">
+                                    <i class="fas fa-magic"></i>
+                                    Skills/Attributes
+                                </h3>
+                                <div class="skill-list">
+                                    ${build.skills.map(skill => `
+                                        <div class="skill-item">
+                                            <span class="item-name">${skill.name}</span>
+                                            <span class="item-level">${skill.level}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="build-meta" style="margin-top: 2rem;">
+                            <div class="build-author">
+                                <i class="fas fa-user"></i>
+                                <span>Created by ${build.author} on ${new Date(build.createdAt).toLocaleDateString()}</span>
+                            </div>
+                            <div class="build-interactions">
+                                <button class="btn btn-primary" onclick="copyBuildLink(${build.id})">
+                                    <i class="fas fa-link"></i> Copy Link
+                                </button>
+                                <button class="btn btn-secondary" onclick="exportBuild(${build.id})">
+                                    <i class="fas fa-download"></i> Export
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                modal.classList.add('show');
+            }
+            
+            handleBuildSubmit(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(e.target);
+                const newBuild = {
+                    id: Date.now(),
+                    title: document.getElementById('buildTitle').value,
+                    game: document.getElementById('buildGame').value,
+                    gameTitle: document.getElementById('buildGame').selectedOptions[0].text,
+                    type: document.getElementById('buildType').value,
+                    difficulty: document.getElementById('buildDifficulty').value,
+                    description: document.getElementById('buildDescription').value,
+                    tags: document.getElementById('buildTags').value.split(',').map(tag => tag.trim()).filter(tag => tag),
+                    rating: 0,
+                    likes: 0,
+                    author: 'You',
+                    createdAt: new Date().toISOString().split('T')[0],
+                    stats: { damage: 50, defense: 50, utility: 50 },
+                    equipment: [],
+                    skills: []
+                };
+                
+                this.builds.unshift(newBuild);
+                this.saveBuilds();
+                this.renderBuilds();
+                this.hideCreateForm();
+                this.showNotification('Build created successfully!', 'success');
+            }
+            
+            saveBuilds() {
+                localStorage.setItem('gameBuilds', JSON.stringify(this.builds));
+            }
+            
+            loadLikedBuilds() {
+                const saved = localStorage.getItem('likedBuilds');
+                if (saved) {
+                    this.likedBuilds = new Set(JSON.parse(saved));
+                }
+            }
+            
+            saveLikedBuilds() {
+                localStorage.setItem('likedBuilds', JSON.stringify([...this.likedBuilds]));
+            }
+            
+            toggleLike(buildId) {
+                const build = this.builds.find(b => b.id === buildId);
+                if (!build) return;
+                
+                if (this.likedBuilds.has(buildId)) {
+                    this.likedBuilds.delete(buildId);
+                    build.likes--;
+                } else {
+                    this.likedBuilds.add(buildId);
+                    build.likes++;
+                }
+                
+                this.saveLikedBuilds();
+                this.saveBuilds();
+                this.renderBuilds();
+            }
+            
+            showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `notification notification-${type}`;
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 1rem 1.5rem;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 3000;
+                    transform: translateX(400px);
+                    opacity: 0;
+                    transition: all 0.3s ease;
+                    background: ${type === 'success' ? '#00b894' : '#6c5ce7'};
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(0)';
+                    notification.style.opacity = '1';
+                }, 100);
+                
+                setTimeout(() => {
+                    notification.style.transform = 'translateX(400px)';
+                    notification.style.opacity = '0';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            document.body.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+        }
+        
+        let buildHub;
+        
+        function showCreateForm() {
+            document.getElementById('createBuildForm').classList.add('show');
+            document.getElementById('buildTitle').focus();
+        }
+        
+        function hideCreateForm() {
+            document.getElementById('createBuildForm').classList.remove('show');
+            document.getElementById('buildForm').reset();
+        }
+        
+        function showBuildDetail(buildId) {
+            buildHub.showBuildDetail(buildId);
+        }
+        
+        function closeBuildModal() {
+            document.getElementById('buildModal').classList.remove('show');
+        }
+        
+        function toggleLike(buildId) {
+            buildHub.toggleLike(buildId);
+        }
+        
+        function shareBuild(buildId) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Check out this awesome build!',
+                    url: `${window.location.href}?build=${buildId}`
+                });
+            } else {
+                navigator.clipboard.writeText(`${window.location.href}?build=${buildId}`);
+                buildHub.showNotification('Build link copied to clipboard!', 'success');
+            }
+        }
+        
+        function copyBuildLink(buildId) {
+            navigator.clipboard.writeText(`${window.location.href}?build=${buildId}`);
+            buildHub.showNotification('Build link copied to clipboard!', 'success');
+        }
+        
+        function exportBuild(buildId) {
+            const build = buildHub.builds.find(b => b.id === buildId);
+            if (build) {
+                const dataStr = JSON.stringify(build, null, 2);
+                const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                
+                const exportFileDefaultName = `${build.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_build.json`;
+                
+                const linkElement = document.createElement('a');
+                linkElement.setAttribute('href', dataUri);
+                linkElement.setAttribute('download', exportFileDefaultName);
+                linkElement.click();
+            }
+        }
+        
+        function importBuild() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        try {
+                            const build = JSON.parse(e.target.result);
+                            build.id = Date.now();
+                            build.author = 'Imported';
+                            buildHub.builds.unshift(build);
+                            buildHub.saveBuilds();
+                            buildHub.renderBuilds();
+                            buildHub.showNotification('Build imported successfully!', 'success');
+                        } catch (err) {
+                            buildHub.showNotification('Invalid build file!', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+        
+        // Initialize the build sharing hub
+        document.addEventListener('DOMContentLoaded', () => {
+            buildHub = new BuildSharingHub();
+            
+            // Handle modal clicks
+            document.getElementById('buildModal').addEventListener('click', (e) => {
+                if (e.target.id === 'buildModal') {
+                    closeBuildModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
