@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday Mom! 🎉</title>
+    <link rel="stylesheet" href="mom-birthday.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Animated Background Elements -->
+    <div class="floating-hearts"></div>
+    <div class="sparkles"></div>
+    <div class="confetti"></div>
+
+    <!-- Header Section -->
+    <header class="hero-section">
+        <div class="hero-content">
+            <h1 class="main-title">Happy Birthday</h1>
+            <h2 class="mom-title">Beautiful Mom!</h2>
+            <div class="birthday-cake">🎂</div>
+            <p class="hero-message">Today we celebrate the most amazing woman in the world!</p>
+        </div>
+    </header>
+
+    <!-- Photo Gallery Section -->
+    <section class="photo-gallery">
+        <h2 class="section-title">Our Beautiful Memories Together</h2>
+        <div class="photo-grid">
+            <div class="photo-slot" data-label="Baby Photos">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">📸</span>
+                    <p>Add your favorite baby photos of mom here</p>
+                </div>
+                <div class="photo-caption">Sweet Baby Memories</div>
+            </div>
+            
+            <div class="photo-slot" data-label="Childhood">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">👶</span>
+                    <p>Childhood adventures and smiles</p>
+                </div>
+                <div class="photo-caption">Growing Up Beautiful</div>
+            </div>
+            
+            <div class="photo-slot" data-label="Teen Years">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">🌟</span>
+                    <p>Teenage years and school memories</p>
+                </div>
+                <div class="photo-caption">Teenage Dreams</div>
+            </div>
+            
+            <div class="photo-slot" data-label="Wedding">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">💒</span>
+                    <p>Wedding day magic</p>
+                </div>
+                <div class="photo-caption">Your Special Day</div>
+            </div>
+            
+            <div class="photo-slot" data-label="With Kids">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">👨‍👩‍👧‍👦</span>
+                    <p>Beautiful moments with your children</p>
+                </div>
+                <div class="photo-caption">Amazing Mother</div>
+            </div>
+            
+            <div class="photo-slot" data-label="Recent">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">💖</span>
+                    <p>Recent beautiful moments</p>
+                </div>
+                <div class="photo-caption">Still Gorgeous</div>
+            </div>
+            
+            <div class="photo-slot" data-label="Family">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">🏠</span>
+                    <p>Family gatherings and celebrations</p>
+                </div>
+                <div class="photo-caption">Family Love</div>
+            </div>
+            
+            <div class="photo-slot" data-label="Hobbies">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">🎨</span>
+                    <p>Doing what you love</p>
+                </div>
+                <div class="photo-caption">Your Passions</div>
+            </div>
+            
+            <div class="photo-slot" data-label="Travel">
+                <div class="photo-placeholder">
+                    <span class="photo-icon">✈️</span>
+                    <p>Adventures and travels</p>
+                </div>
+                <div class="photo-caption">Wanderlust</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Birthday Messages Section -->
+    <section class="messages-section">
+        <h2 class="section-title">Why You're Amazing</h2>
+        <div class="message-cards">
+            <div class="message-card">
+                <div class="card-icon">💝</div>
+                <h3>Your Love</h3>
+                <p>Your unconditional love has shaped who we are today. Thank you for always believing in us.</p>
+            </div>
+            
+            <div class="message-card">
+                <div class="card-icon">🌟</div>
+                <h3>Your Strength</h3>
+                <p>You've shown us what it means to be strong, resilient, and never give up on our dreams.</p>
+            </div>
+            
+            <div class="message-card">
+                <div class="card-icon">🤗</div>
+                <h3>Your Hugs</h3>
+                <p>Your hugs can fix anything. They're our safe place and our source of comfort.</p>
+            </div>
+            
+            <div class="message-card">
+                <div class="card-icon">🍳</div>
+                <h3>Your Cooking</h3>
+                <p>Nobody makes food taste like home the way you do. Every meal is made with love.</p>
+            </div>
+            
+            <div class="message-card">
+                <div class="card-icon">😊</div>
+                <h3>Your Smile</h3>
+                <p>Your smile lights up every room and makes everything better. It's contagious!</p>
+            </div>
+            
+            <div class="message-card">
+                <div class="card-icon">🎵</div>
+                <h3>Your Laughter</h3>
+                <p>Your laughter is music to our ears. It fills our hearts with joy and happiness.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Birthday Wishes -->
+    <section class="wishes-section">
+        <h2 class="section-title">Make a Wish!</h2>
+        <div class="birthday-candles">
+            <div class="candle" onclick="blowCandle(this)">
+                <div class="flame"></div>
+                <div class="wick"></div>
+                <div class="wax"></div>
+            </div>
+            <div class="candle" onclick="blowCandle(this)">
+                <div class="flame"></div>
+                <div class="wick"></div>
+                <div class="wax"></div>
+            </div>
+            <div class="candle" onclick="blowCandle(this)">
+                <div class="flame"></div>
+                <div class="wick"></div>
+                <div class="wax"></div>
+            </div>
+        </div>
+        <p class="wish-instruction">Click on the candles to blow them out and make a wish! 🎂</p>
+        <div class="wish-message hidden">
+            <h3>🌟 Your wish has been sent to the stars! 🌟</h3>
+            <p>May all your dreams come true this year, Mom!</p>
+        </div>
+    </section>
+
+    <!-- Music Control -->
+    <div class="music-control">
+        <button id="musicBtn" onclick="toggleMusic()">🎵 Play Birthday Song</button>
+        <audio id="birthdayMusic" loop>
+            <!-- You can add an audio file here -->
+            <!-- <source src="happy-birthday.mp3" type="audio/mpeg"> -->
+        </audio>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>Made with 💖 for the most wonderful mom in the world</p>
+            <p>Happy Birthday! We love you more than words can say!</p>
+        </div>
+    </footer>
+
+    <script src="mom-birthday.js"></script>
+</body>
+</html>
